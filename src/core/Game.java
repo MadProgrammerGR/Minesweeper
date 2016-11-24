@@ -16,29 +16,26 @@ public class Game {
 
 		spawnBombs(bombs);
 		calculateNeighbors();
-
 	}
-
+	
 	private void spawnBombs(int totalBombs) {
-		int rows = board[0].length;
-		int columns = board.length;
-		Boolean[] bombs = new Boolean[rows * columns];
-		for (int i = 0; i < bombs.length; i++) {
-			bombs[i] = i < totalBombs;
+		for (int i = 0; i < totalBombs; i++) {
+			board[row(i)][col(i)].setBomb(true);
 		}
+		shuffle();
+	}
+	
+	private void shuffle(){
+		int rows = board.length;
+		int columns = board[0].length;
 		Random random = new Random();
-		for (int i = bombs.length - 1; i > 0; i--) {
+		for (int i = rows*columns - 1; i > 0; i--) {
 			int rand = random.nextInt(i + 1);
-			boolean temp = bombs[i];
-			bombs[i] = bombs[rand];
-			bombs[rand] = temp;
+			//swap
+			Square temp = board[row(i)][col(i)];
+			board[row(i)][col(i)] = board[row(rand)][col(rand)];
+			board[row(rand)][col(rand)] = temp;
 		}
-		
-		for (int i = 0; i < bombs.length; i++) {
-			if (bombs[i])
-				board[row(i)][col(i)].setBomb(true);
-		}
-
 	}
 
 	private void calculateNeighbors() {
@@ -54,11 +51,11 @@ public class Game {
 		}
 	}
 
-	public void makeVisible() {
+	public void setVisible(boolean v) {
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board[i].length; j++) {
 				board[i][j].setFlag(false);
-				board[i][j].setVisible(true);
+				board[i][j].setVisible(v);
 			}
 		}
 	}
@@ -89,6 +86,12 @@ public class Game {
 			}
 		}
 		return true;
+	}
+	
+	public void reset(){
+		shuffle();
+		calculateNeighbors();
+		setVisible(false);
 	}
 	
 	public boolean isOutOfBounds(int r, int c) {

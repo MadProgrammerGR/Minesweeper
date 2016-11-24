@@ -35,7 +35,7 @@ public class Minesweeper {
 			
 			//if u put a flag
 			if(s.equals("yes")){
-				game.getBoard()[row][column].setFlag(true);
+				game.getBoard()[row][column].toggleFlag();
 				continue;
 			}
 			
@@ -45,7 +45,7 @@ public class Minesweeper {
 			
 			//if u touched bomb
 			if(game.getBoard()[row][column].isBomb()){
-				game.makeVisible();
+				game.setVisible(true);
 				printBoard();
 				System.out.println("You lost!");
 				break;

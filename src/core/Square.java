@@ -44,5 +44,9 @@ public class Square {
 	public void setFlag(boolean flag) {
 		flagged = flag;
 	}
+	
+	public void toggleFlag(){
+		flagged = !flagged;
+	}
 
 }
