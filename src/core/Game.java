@@ -4,6 +4,9 @@ import java.util.Random;
 
 public class Game {
 	private Square[][] board;
+	public static final int GAMEOVER = 0;
+	public static final int WIN = 1;
+	public static final int NOTHING = 2;
 
 	public Game(int width, int height, int bombs) {
 		
@@ -41,6 +44,11 @@ public class Game {
 	private void calculateNeighbors() {
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board[i].length; j++) {
+				board[i][j].setNeighbors(0);
+			}
+		}
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board[i].length; j++) {
 				if (!board[i][j].isBomb())
 					continue;
 				for (int x = -1; x <= 1; x++)
@@ -60,7 +68,31 @@ public class Game {
 		}
 	}
 
-	public void show(int x, int y) {
+	public int select(int x, int y, boolean flag){
+		if(flag){
+			board[y][x].toggleFlag();
+			return NOTHING;
+		}
+		
+		if(board[y][x].isFlagged())
+			return NOTHING;
+		
+		if(board[y][x].isBomb()){
+			setVisible(true);
+			return GAMEOVER;
+		}
+		
+		show(x, y);
+		
+		if(win()){
+			setVisible(true);
+			return WIN;
+		}
+		
+		return NOTHING;
+	}
+	
+	private void show(int x, int y) {
 		if (isOutOfBounds(y, x) || board[y][x].isVisible())
 			return;
 		board[y][x].setVisible(true);
@@ -76,7 +108,7 @@ public class Game {
 		}
 	}
 
-	public boolean win() {
+	private boolean win() {
 		for(int i=0;i<board.length;i++){
 			for(int j = 0;j<board[i].length;j++){
 				Square current = board[i][j];

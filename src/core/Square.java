@@ -15,7 +15,11 @@ public class Square {
 	public int getNeighbors() {
 		return neighbors;
 	}
-
+	
+	public void setNeighbors(int n){
+		neighbors = n;
+	}
+	
 	public void incrementNeighbors() {
 		this.neighbors++;
 	}
